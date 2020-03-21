@@ -1,6 +1,7 @@
 {
     "name": "weaponhsu/ylaliopen",
     "description": "youli-1688-sdk",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
@@ -8,14 +9,13 @@
             "email": "huangxu4328@163.com"
         }
     ],
-    "minimum-stability": "dev",
-    "require": {},
     "repositories": {
         "packagist": {
             "type": "composer",
             "url": "https://packagist.phpcomposer.com"
         }
     },
+    "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
             "ylAlibaba\\": "src/"
