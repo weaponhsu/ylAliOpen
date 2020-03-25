@@ -22,6 +22,8 @@ class BaseClient
 
     public $res_url;
 
+    public $mode = 'production';
+
     public function __construct(Container $app)
     {
         $this->app = $app;
@@ -32,39 +34,46 @@ class BaseClient
      * @throws ylAlibabaException
      */
     public function sign(){
-        //url 因子
-        if(empty($this->url_info)){
-            throw new ylAlibabaException('url因子为空，如无配置，请配置');
-        }
-        $arr = explode(':',$this->url_info);
-        $spacename = $arr[0];
-        $arr = explode('-',$arr[1]);
-        $version = $arr[1];
-        $apiname = $arr[0];
-        $url_info = 'param2/'.$version.'/'.$spacename.'/'.$apiname.'/';
+        if ($this->mode === 'production') {
+            //url 因子
+            if(empty($this->url_info)){
+                throw new ylAlibabaException('url因子为空，如无配置，请配置');
+            }
+            $arr = explode(':',$this->url_info);
+            $spacename = $arr[0];
+            $arr = explode('-',$arr[1]);
+            $version = $arr[1];
+            $apiname = $arr[0];
+            $url_info = 'param2/'.$version.'/'.$spacename.'/'.$apiname.'/';
 
-        //参数因子
-        $appKey = $this->app->app_key;
-        $appSecret =$this->app->app_secret;
-        $apiInfo = $url_info. $appKey;//此处请用具体api进行替换
-        //配置参数，请用apiInfo对应的api参数进行替换
-        $code_arr = array_merge([
-            'access_token' => $this->app->access_token
-        ],$this->app->params);
-        $aliParams = array();
-        $url_pin = '';
-        foreach ($code_arr as $key => $val) {
-            $url_pin .=$key.'='.$val.'&';
-            $aliParams[] = $key . $val;
-        }
-        sort($aliParams);
-        $sign_str = join('', $aliParams);
-        $sign_str = $apiInfo . $sign_str;
+            //参数因子
+            $appKey = $this->app->app_key;
+            $appSecret =$this->app->app_secret;
+            $apiInfo = $url_info. $appKey;//此处请用具体api进行替换
+            //配置参数，请用apiInfo对应的api参数进行替换
+            $code_arr = array_merge([
+                'access_token' => $this->app->access_token
+            ],$this->app->params);
+            $aliParams = array();
+            $url_pin = '';
+            foreach ($code_arr as $key => $val) {
+                $url_pin .=$key.'='.$val.'&';
+                $aliParams[] = $key . $val;
+            }
+            sort($aliParams);
+            $sign_str = join('', $aliParams);
+            $sign_str = $apiInfo . $sign_str;
 
-        //签名
-        $code_sign = strtoupper(bin2hex(hash_hmac("sha1", $sign_str, $appSecret, true)));
-        $this->postData  = $code_arr;
-        $this->res_url =  $this->base_url.$apiInfo.'?'.$url_pin.'_aop_signature='.$code_sign;
+            //签名
+            $code_sign = strtoupper(bin2hex(hash_hmac("sha1", $sign_str, $appSecret, true)));
+            $this->postData  = $code_arr;
+            $this->res_url =  $this->base_url.$apiInfo.'?'.$url_pin.'_aop_signature='.$code_sign;
+        }
+    }
+
+    public function setMode($mode = '') {
+        if (!empty($mode))
+            $this->mode = $mode;
     }
 
     /**
