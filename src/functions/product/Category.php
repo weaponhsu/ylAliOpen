@@ -42,7 +42,7 @@ class Category extends BaseClient
             }
             throw new ylAlibabaException($msg);
         } else {
-            if ($resp['categoryInfo'][0]['categoryID'] === $this->app->params['categoryID']) {
+            if ($resp['categoryInfo'][0]['categoryID'] == $this->app->params['categoryID']) {
                 if ($resp['categoryInfo'][0]['isLeaf'] === true && empty($resp['categoryInfo'][0]['childCategorys'])) {
                     array_push($result, ['id' => $resp['categoryInfo'][0]['categoryID'], 'parent' => $resp['categoryInfo'][0]['parentIDs'][0],
                         'name' => $resp['categoryInfo'][0]['name'], 'publishing' => 1,
