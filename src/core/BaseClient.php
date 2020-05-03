@@ -68,6 +68,11 @@ class BaseClient
             $code_sign = strtoupper(bin2hex(hash_hmac("sha1", $sign_str, $appSecret, true)));
             $this->postData  = $code_arr;
             $this->res_url =  $this->base_url.$apiInfo.'?'.$url_pin.'_aop_signature='.$code_sign;
+        } else {
+            $code_arr = array_merge([
+                'access_token' => $this->app->access_token
+            ],$this->app->params);
+            $this->postData  = $code_arr;
         }
     }
 
