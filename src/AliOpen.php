@@ -6,6 +6,7 @@ namespace ylAlibaba;
 
 use ylAlibaba\core\ContainerBase;
 use ylAlibaba\provider\CategoryProvider;
+use ylAlibaba\provider\OrderProvider;
 use ylAlibaba\provider\ProductProvider;
 
 /**
@@ -27,7 +28,8 @@ class AliOpen extends ContainerBase
 
     protected $provider = [
         CategoryProvider::class,
-        ProductProvider::class
+        ProductProvider::class,
+        OrderProvider::class
         //...其他服务提供者
     ];
 }

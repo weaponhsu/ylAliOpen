@@ -7,17 +7,28 @@ namespace ylAlibaba\functions\product;
 use ylAlibaba\core\BaseClient;
 use ylAlibaba\core\ylAlibabaException;
 
+/**
+ * Class Product
+ * @package ylAlibaba\functions\product
+ */
 class Product extends BaseClient
 {
     const ERR_MSG = "报错[#error_code# - #error_message# - #exception#]";
+
     /**
-     * 订单列表
-     * @return $this
+     * 根据product_id关注产品
+     * @return mixed
+     * @throws ylAlibabaException
      */
     public function productFollow() {
         $this->url_info = "com.alibaba.product:alibaba.product.follow-1";
 
-        return $this;
+        $resp = $this->post();
+
+        if (isset($resp['code']) && $resp['code'] == 0 && isset($resp['message']) && $resp['message'] == 'success')
+            return $resp;
+
+        throw new ylAlibabaException("产品关注失败");
     }
 
     /**
@@ -56,6 +67,12 @@ class Product extends BaseClient
      */
     public function productQueryOfferDetailActivity() {
         $this->url_info = "com.alibaba.p4p:alibaba.cps.queryOfferDetailActivity-1";
+
+        return $this;
+    }
+
+    public function productUnFollow() {
+        $this->url_info = "com.alibaba.product:alibaba.product.unfollow.crossborder-1";
 
         return $this;
     }
