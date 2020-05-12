@@ -14,7 +14,7 @@ class BaseClient
 {
     protected $app;
 
-    public $base_url = 'http://gw.open.1688.com/openapi/';
+    public $base_url = 'https://gw.open.1688.com/openapi/';
 
     public $url_info;
 

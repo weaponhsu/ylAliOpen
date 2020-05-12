@@ -53,22 +53,43 @@ class Product extends BaseClient
 
     /**
      * 获取商品详情接口
-     * @return $this
+     * @return mixed
+     * @throws ylAlibabaException
      */
     public function productCpsMediaProductInfo() {
         $this->url_info = "com.alibaba.product:alibaba.cpsMedia.productInfo-1";
 
-        return $this;
+        $resp = $this->post();
+
+        if (! isset($resp['success']) || $resp['success'] != true) {
+            $msg = $this->url_info . self::ERR_MSG;
+            foreach ($resp as $idx => $value) {
+                if (strpos($msg, '#' . $idx . '#') !== false)
+                    $msg = str_replace('#' . $idx . '#', $value, $msg);
+            }
+            throw new ylAlibabaException($msg);
+        }
+
+        return $resp;
     }
 
     /**
      * 获取营销活动价格等活动信息
-     * @return $this
+     * @return mixed
+     * @throws ylAlibabaException
      */
     public function productQueryOfferDetailActivity() {
         $this->url_info = "com.alibaba.p4p:alibaba.cps.queryOfferDetailActivity-1";
 
-        return $this;
+        $resp = $this->post();
+
+        if (empty($resp))
+            return $resp;
+        if (! isset($resp['success']) || $resp['success'] !== true) {
+
+        }
+
+        return $resp['result'];
     }
 
     public function productUnFollow() {
@@ -81,7 +102,7 @@ class Product extends BaseClient
 
         $resp = $this->post();
 
-        if (! isset($resp['success']) || $resp['success'] != 'true') {
+        if (! isset($resp['result']['success']) || $resp['result']['success'] !== true) {
             $msg = $this->url_info . self::ERR_MSG;
             foreach ($resp as $idx => $value) {
                 if (strpos($msg, '#' . $idx . '#') !== false)
