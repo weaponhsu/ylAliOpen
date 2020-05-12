@@ -86,7 +86,12 @@ class Product extends BaseClient
         if (empty($resp))
             return $resp;
         if (! isset($resp['success']) || $resp['success'] !== true) {
-
+            $msg = $this->url_info . self::ERR_MSG;
+            foreach ($resp as $idx => $value) {
+                if (strpos($msg, '#' . $idx . '#') !== false)
+                    $msg = str_replace('#' . $idx . '#', $value, $msg);
+            }
+            throw new ylAlibabaException($msg);
         }
 
         return $resp['result'];
