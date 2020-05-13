@@ -46,6 +46,27 @@ class Order extends BaseClient
     }
 
     /**
+     * 获取所有的物流公司名称
+     * @return mixed
+     * @throws ylAlibabaException
+     */
+    public function logisticsOpQueryLogisticCompanyList() {
+        $this->url_info = "com.alibaba.logistics:alibaba.logistics.OpQueryLogisticCompanyList-1";
+
+        return $this;
+    }
+
+    /**
+     * 查询自己联系物流的物流公司列表
+     * @return $this
+     */
+    public function logisticsOpQueryLogisticCompanyListOffline() {
+        $this->url_info = "com.alibaba.logistics:alibaba.logistics.OpQueryLogisticCompanyList.offline-1";
+
+        return $this;
+    }
+
+    /**
      * 溢价模式创建订单前预览数据接口
      * @return $this
      */
@@ -158,26 +179,6 @@ class Order extends BaseClient
         }
 
         return $response['result']['result'];
-    }
-
-    /**
-     * 获取所有的物流公司名称
-     * @return $this
-     */
-    public function logisticsOpQueryLogisticCompanyList() {
-        $this->url_info = "com.alibaba.logistics:alibaba.logistics.OpQueryLogisticCompanyList-1";
-
-        return $this;
-    }
-
-    /**
-     * 查询自己联系物流的物流公司列表
-     * @return $this
-     */
-    public function logisticsOpQueryLogisticCompanyListOffline() {
-        $this->url_info = "com.alibaba.logistics:alibaba.logistics.OpQueryLogisticCompanyList.offline-1";
-
-        return $this;
     }
 
     /**
