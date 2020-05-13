@@ -32,6 +32,22 @@ class Product extends BaseClient
     }
 
     /**
+     * 根据product_id取关产品
+     * @return mixed
+     * @throws ylAlibabaException
+     */
+    public function productUnFollow() {
+        $this->url_info = "com.alibaba.product:alibaba.product.unfollow.crossborder-1";
+
+        $resp = $this->post();
+
+        if (isset($resp['code']) && $resp['code'] == 0 && isset($resp['message']) && $resp['message'] == 'success')
+            return $resp;
+
+        throw new ylAlibabaException("产品取注失败");
+    }
+
+    /**
      * 获取我的选品库
      * @return $this
      */
@@ -95,12 +111,6 @@ class Product extends BaseClient
         }
 
         return $resp['result'];
-    }
-
-    public function productUnFollow() {
-        $this->url_info = "com.alibaba.product:alibaba.product.unfollow.crossborder-1";
-
-        return $this;
     }
 
     public function getResp() {
