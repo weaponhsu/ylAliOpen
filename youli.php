@@ -8,6 +8,15 @@ use Yaf\Registry;
 use ylAlibaba\AliOpen;
 use ylAlibaba\core\ylAlibabaException;
 
+$order_id = '1016932098506070029';
+//$order_id = 'abcv';
+
+list($delivery_no, $company_name) = Alibaba::getDeliveryNo($order_id);
+var_dump($delivery_no, $company_name);
+
+var_dump(Alibaba::getLogisticsTraceInfo($order_id, $delivery_no));
+exit();
+
 // 退款、退货
 // 1688订单编号 order表中的trade_order_sn
 /*$alibaba_order_id = '1688-orderId-' . time();
@@ -240,6 +249,57 @@ class Alibaba {
     const APP_SECRET = "9KxUA0WTFJA";
     const APP_KEY = "4911751";
     const ACCESS_TOKEN = "478884a3-0e07-4585-affa-ac1384ef8a40";
+
+    static public function getLogisticsTraceInfo($order_id, $delivery_id) {
+
+        $ali = new AliOpen();
+        $ali->setAppKey(static::APP_KEY);
+        $ali->setAppSecret(static::APP_SECRET);
+
+        // 测试时使用本地接口 正式接口调用时 注释掉下面两行
+
+        $ali->params = [
+            'orderId' => $order_id,
+            'logisticsId' => $delivery_id,
+            'webSite' => '1688'
+        ];
+
+        try {
+            $resp = $ali->delivery->getLogisticsTraceInfo();
+
+            return $resp;
+        } catch (ylAlibabaException $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * 通过1688订单号，获取运单号
+     * @param string $order_id
+     * @return mixed
+     * @throws ylAlibabaException
+     */
+    static public function getDeliveryNo($order_id = '') {
+        $ali = new AliOpen();
+        $ali->setAppKey(static::APP_KEY);
+        $ali->setAppSecret(static::APP_SECRET);
+
+        // 测试时使用本地接口 正式接口调用时 注释掉下面两行
+
+        $ali->params = [
+            'orderId' => $order_id,
+            'fields' => 'company,name,sendgood,receiver',
+            'webSite' => '1688'
+        ];
+
+        try {
+            $resp = $ali->delivery->getLogisticsInfos();
+
+            return $resp;
+        } catch (ylAlibabaException $e) {
+            throw $e;
+        }
+    }
 
     /**
      * 买家提交退款货信息 在1688卖家同意退货后调用
