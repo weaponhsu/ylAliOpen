@@ -145,6 +145,11 @@ class BaseClient
         } else {
             if ( !empty($query_data) && is_array($query_data)){
                 foreach($query_data as $key => $val) {
+                    if($key=='imageData'){
+                        if (file_exists($val)) {
+                            $query_data[$key] = new \CURLFile($val);
+                        }
+                    }
                     if (is_array($val)) {
                         $query_data[$key] = serialize($val);
                     }

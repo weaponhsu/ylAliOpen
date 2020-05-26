@@ -103,7 +103,34 @@ class Order extends BaseClient
     public function tradeRefundReasonList() {
         $this->url_info = "com.alibaba.trade:alibaba.trade.getRefundReasonList-1";
 
-        return $this;
+        $response = $this->post();
+
+        $resp = $response['result'];
+
+        if (! isset($resp['success']) || $resp['success'] != true) {
+            $msg = $this->url_info . self::ERR_MSG;
+
+            if (strpos($msg, '#error_code#') !== false) {
+                if (isset($resp['error_code']))
+                    $msg = str_replace('#error#', $resp['error_code'], $msg);
+                if (isset($resp['code']))
+                    $msg = str_replace('#error_code#', $resp['code'], $msg);
+            }
+            if (strpos($msg, '#error_message#') !== false) {
+                if (isset($resp['error_message']))
+                    $msg = str_replace('#error_message#', $resp['error_message'], $msg);
+                if (isset($resp['message']))
+                    $msg = str_replace('#error_message#', $resp['message'], $msg);
+            }
+            if (strpos($msg, '#exception#') !== false) {
+                $msg = str_replace('#exception#', '接口调用失败', $msg);
+                $msg = str_replace('#exception#', '接口调用失败', $msg);
+            }
+
+            throw new ylAlibabaException($msg);
+        }
+
+        return $response['result']['result'];
     }
 
     /**
