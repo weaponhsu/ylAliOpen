@@ -16,6 +16,34 @@ class Order extends BaseClient
     const ERR_MSG = "报错[#error_code# - #error_message# - #exception#]";
 
     /**
+     * 查询退款单详情-根据退款单ID
+     * @return mixed
+     * @throws ylAlibabaException
+     */
+    public function opQueryOrderRefund() {
+        $this->url_info = "com.alibaba.trade:alibaba.trade.refund.OpQueryOrderRefund-1";
+        $resp=$this->post();
+        // 接口调用失败，通常是没有权限调用
+        if (isset($resp['error_code']) && isset($resp['error_message'])) {
+            $msg = $this->url_info . self::ERR_MSG;
+            foreach ($resp as $idx => $value) {
+                if (strpos($msg, '#' . $idx . '#') !== false)
+                    $msg = str_replace('#' . $idx . '#', $value, $msg);
+            }
+
+            throw new ylAlibabaException($msg);
+        }
+        // 需要根据接口实际情况进行调整
+        else if (isset($resp['errorCode']) && $resp['errorCode'] != 0) {
+            $msg = '查询退款单详情接口报错: ' . $resp['errorMessage'];
+            throw new ylAlibabaException($msg);
+        }
+
+
+        return $resp['result'];
+    }
+
+    /**
      * 根据地址解析地区码
      * @return mixed
      * @throws ylAlibabaException
