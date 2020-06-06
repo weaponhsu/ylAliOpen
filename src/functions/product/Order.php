@@ -169,7 +169,8 @@ class Order extends BaseClient
     public function tradeCreateRefund() {
         $this->url_info = "com.alibaba.trade:alibaba.trade.createRefund-1";
 
-        $resp = $this->post();
+        $response = $this->post();
+        $resp = $response['result'];
 
         if (! isset($resp['success']) || $resp['success'] != true) {
 
@@ -195,7 +196,7 @@ class Order extends BaseClient
             throw new ylAlibabaException($msg);
         }
 
-        return $resp;
+        return $response;
     }
 
     /**
