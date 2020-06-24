@@ -26,7 +26,7 @@ class Delivery extends BaseClient
             throw new ylAlibabaException($resp['error_message'], 400);
 
         if (isset($resp['result']) && ($resp['success'] === true || $resp['success'] == 'true'))
-            return [$resp['result'][0]['logisticsBillNo'], $resp['result'][0]['logisticsCompanyName'], $resp['result'][0]['status']];
+            return [$resp['result'][0]['logisticsBillNo'], $resp['result'][0]['logisticsId'], $resp['result'][0]['logisticsCompanyName'], $resp['result'][0]['status']];
         else
             throw new ylAlibabaException('接口异常', 400);
     }
